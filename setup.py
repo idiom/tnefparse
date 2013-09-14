@@ -14,16 +14,17 @@ class PyTest(Command):
         errno = subprocess.call([sys.executable, 'runtests.py'])
         raise SystemExit(errno)
 
-setup(name='tnefparse',
+setup(name='yatp',
       version=version,
-      description="a TNEF decoding library written in python, without external dependencies",
-      long_description="""\
-""",
-      classifiers=[], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
+      description="A TNEF decoding library written in python, without external dependencies",
+      long_description=""" """,
+      classifiers=[
+      'Development Status :: 3 - Alpha',      
+      ], # Get strings from http://pypi.python.org/pypi?%3Aaction=list_classifiers
       keywords='TNEF MAPI decoding mail email microsoft',
-      author='Petri Savolainen',
-      author_email='petri.savolainen@koodaamo.fi',
-      url='https://github.com/koodaamo/tnefparse',
+      author='Sean Wilson',
+      author_email='sean@idiom.ca',
+      url='https://github.com/idiom/yatp',
       license='LGPL',
       packages=find_packages(exclude=['ez_setup', 'examples', 'tests']),
       include_package_data=True,
@@ -32,7 +33,7 @@ setup(name='tnefparse',
           # -*- Extra requirements: -*-
       ],
       entry_points = {
-         'console_scripts': ['tnefparse = tnefparse.cmdline:tnefparse']
+         'console_scripts': ['yatp = tnefparse.cmdline:tnefparse']
       },
       cmdclass = {'test': PyTest},
       )
