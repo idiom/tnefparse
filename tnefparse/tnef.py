@@ -228,6 +228,8 @@ class TNEF:
                   self.body = p.data
                elif p.name == TNEFMAPI_Attribute.MAPI_BODY_HTML:
                   self.htmlbody = p.data
+         elif obj.name == TNEF.ATTSUBJECT:
+		    self.subject = obj.data	 
          else:
             logger.warn("Unknown TNEF Object: %s" % obj)
 
