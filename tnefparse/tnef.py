@@ -2,39 +2,42 @@
 """
 import sys, logging
 
-logger = logging.getLogger("tnef-decode")
-
 from util import bytes_to_int, checksum
 from mapi import TNEFMAPI_Attribute, decode_mapi
 
+logger = logging.getLogger("tnef-decode")
+
+
 
 class TNEFObject(object):
-   "a TNEF object that may contain a property and an attachment"
+	"""
+	A TNEF object that may contain a property and an attachment
+	"""
 
-   def __init__(self, data, do_checksum=False):
-      offset = 0
-      self.level = bytes_to_int(data[offset: offset+1]); offset += 1
-      self.name = bytes_to_int(data[offset:offset+2]); offset += 2
-      self.type = bytes_to_int(data[offset:offset+2]); offset += 2
-      att_length = bytes_to_int(data[offset:offset+4]); offset += 4
-      self.data = data[offset:offset+att_length]; offset += att_length
-      att_checksum = bytes_to_int(data[offset:offset+2]); offset += 2
+	def __init__(self, data, do_checksum=False):
+		offset = 0
+		self.level = bytes_to_int(data[offset: offset+1]); offset += 1
+		self.name = bytes_to_int(data[offset:offset+2]); offset += 2
+		self.type = bytes_to_int(data[offset:offset+2]); offset += 2
+		att_length = bytes_to_int(data[offset:offset+4]); offset += 4
+		self.data = data[offset:offset+att_length]; offset += att_length
+		att_checksum = bytes_to_int(data[offset:offset+2]); offset += 2
 
-      self.length = offset
+		self.length = offset
 
-      if do_checksum:
-         calc_checksum = checksum(self.data)
-         if calc_checksum != att_checksum:
-            logger.warn("Checksum: %s != %s" % (calc_checksum, att_checksum))
-      else:
-         calc_checksum = att_checksum
+		if do_checksum:
+			calc_checksum = checksum(self.data)
+			if calc_checksum != att_checksum:
+				logger.warn("Checksum: %s != %s" % (calc_checksum, att_checksum))
+		else:
+			calc_checksum = att_checksum
 
-      # whether the checksum is ok
-      self.good_checksum = calc_checksum == att_checksum
+		# whether the checksum is ok
+		self.good_checksum = calc_checksum == att_checksum
 
 
-   def __str__(self):
-      return "<%s '%s'>" % (self.__class__.__name__, TNEF.codes.get(self.name))
+	def __str__(self):
+		return "<%s '%s'>" % (self.__class__.__name__, TNEF.codes.get(self.name))
 
 
 class TNEFAttachment(object):
@@ -77,8 +80,7 @@ class TNEFAttachment(object):
       #SZMAPI_PT_SYSTIME              :  "MAPI time (after 2038/01/17 22:14:07 or before 1970/01/01 00:00:00)",
       SZMAPI_SYSTIME                  :  "MAPI time (64 bits)",
       SZMAPI_CLSID                    :  "MAPI OLE GUID",
-      SZMAPI_BINARY                   :  "MAPI binary",
-      SZMAPI_BEATS_THE_HELL_OUTTA_ME  :  "Unknown"
+      SZMAPI_BINARY                   :  "MAPI binary"
    }
 
    def __init__(self):
@@ -230,6 +232,10 @@ class TNEF:
                   self.htmlbody = p.data
          elif obj.name == TNEF.ATTSUBJECT:
 		    self.subject = obj.data	 
+         elif obj.name == ATTDATESENT:
+            self.date_sent = obj.data
+         elif obj.name == ATTMESSAGEID:
+            self.messageid = obj.data
          else:
             logger.warn("Unknown TNEF Object: %s" % obj)
 
