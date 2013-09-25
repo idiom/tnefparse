@@ -232,9 +232,9 @@ class TNEF:
                   self.htmlbody = p.data
          elif obj.name == TNEF.ATTSUBJECT:
 		    self.subject = obj.data	 
-         elif obj.name == ATTDATESENT:
+         elif obj.name == TNEF.ATTDATESENT:
             self.date_sent = obj.data
-         elif obj.name == ATTMESSAGEID:
+         elif obj.name == TNEF.ATTMESSAGEID:
             self.messageid = obj.data
          else:
             logger.warn("Unknown TNEF Object: %s" % obj)
